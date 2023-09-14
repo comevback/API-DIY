@@ -68,14 +68,23 @@ app.patch("/jokes/:id", (req, res) => {
 //7. DELETE Specific joke
 app.delete("/jokes/:id", (req, res) => {
   const jokeID = parseInt(req.params.id);
-  jokes.splice(jokeID - 1, 1);
-  res.send("deleted the element");
+  if(jokeID>0 && jokeID<jokes.length){
+    jokes.splice(jokeID - 1, 1);
+    res.send("deleted the element");
+  }else{
+    res.send("index is wrong")
+  }
 })
 
 //8. DELETE All jokes
 app.delete("/all", (req, res) => {
-  jokes = [];
-  res.send("deleted all element");
+  const userkey = req.query.apiKey;
+  if(userkey === masterKey){
+    jokes = [];
+    res.send("deleted all element");
+  }else {
+    res.status(401).send("Unauthorized"); // 发送未授权响应
+  }
 })
 
 app.listen(port, () => {
